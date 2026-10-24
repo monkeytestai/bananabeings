@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ApplyCoupon } from "@/components/apply-coupon";
 import { useCart } from "@/components/cart-provider";
 import { inr } from "@/lib/money";
 
@@ -53,11 +54,14 @@ export default function CartPage() {
             <span>Subtotal</span>
             <span className="text-xl font-semibold">{inr(cart.subtotal)}</span>
           </div>
-          <Link href="/checkout" className="mt-6 block rounded-full bg-ink py-3 text-center text-sm font-semibold text-card">
-            Checkout
-          </Link>
         </>
       )}
+      <ApplyCoupon />
+      {cart.ready && cart.items.length > 0 ? (
+        <Link href="/checkout" className="mt-6 block rounded-full bg-ink py-3 text-center text-sm font-semibold text-card">
+          Checkout
+        </Link>
+      ) : null}
     </div>
   );
 }

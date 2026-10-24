@@ -3,17 +3,26 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { ApplyCoupon } from "@/components/apply-coupon";
 import { useCart } from "@/components/cart-provider";
+import { useMonkeyMode } from "@/components/monkey-mode";
 import { inr } from "@/lib/money";
 import { saveOrder } from "@/lib/order";
 
 export default function CheckoutPage() {
   const cart = useCart();
+  const mode = useMonkeyMode();
   const router = useRouter();
   const [error, setError] = useState("");
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (mode === "buggy") {
+      window.setTimeout(() => {
+        throw new Error("save failed");
+      }, 0);
+      return;
+    }
     if (cart.items.length === 0) {
       setError("Your cart is empty.");
       return;
@@ -68,11 +77,13 @@ export default function CheckoutPage() {
               Demo — no charge
             </label>
           </fieldset>
+          <ApplyCoupon />
           {error ? <p className="text-sm text-peel">{error}</p> : null}
           <button
             type="submit"
-            className="rounded-full bg-ink py-3 text-sm font-semibold text-card disabled:opacity-40"
-            disabled={!cart.ready || cart.items.length === 0}
+            id="place-order"
+            data-testid="place-order"
+            className="rounded-full bg-ink py-3 text-sm font-semibold text-card"
           >
             Place order
           </button>
