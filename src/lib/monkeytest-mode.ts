@@ -1,5 +1,5 @@
 /**
- * Bug-mode contract shared with monkeytest-core's demo fixture.
+ * Bug-mode contract shared with monkeytester's demo fixture.
  *
  * Labels stay stable across modes. The mode itself is a cookie (plus an
  * optional `?monkeytest=` override) because a Vercel isolate does not keep

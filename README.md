@@ -22,7 +22,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | Catalog | `src/data/catalog.ts` | No Postgres, no Shopify bill |
 | Cart | `localStorage` | No server session |
 | Checkout | Demo confirmation in `sessionStorage` | No payment provider |
-| Bug mode | Cookie + `GET`/`POST /__monkeytest/mode` | Same UI, seeded faults for [monkeytest](https://github.com/monkeytestai/monkeytest-core) |
+| Bug mode | Cookie + `GET`/`POST /__monkeytest/mode` | Same UI, seeded faults for [monkeytest](https://github.com/monkeytestai/monkeytester) |
 | Database | None | SQLite still needs a disk Vercel won’t keep for free |
 
 Heavier starters (Next.js Commerce + Shopify, Medusa, Saleor) look finished and then charge you for a backend. This one is a storefront you can fork.
@@ -41,7 +41,7 @@ Checkout does not charge a card and does not ship a parcel.
 
 ## Monkeytest bug mode
 
-The shop is a target for [monkeytest-core](https://github.com/monkeytestai/monkeytest-core). Visitors (and monkeytest) can run the **same pages** in a buggy or fixed variant. Labels, roles, and `data-testid`s do not change between modes, so a recorded trace still hits the control after a flip.
+The shop is a target for [monkeytester](https://github.com/monkeytestai/monkeytester). Visitors (and monkeytest) can run the **same pages** in a buggy or fixed variant. Labels, roles, and `data-testid`s do not change between modes, so a recorded trace still hits the control after a flip.
 
 Production defaults to **buggy**. These four faults are seeded only in that mode:
 
@@ -70,7 +70,7 @@ curl -b /tmp/mt.cookies https://bananabeings.com/__monkeytest/mode
 `POST` accepts the raw body `buggy` or `fixed` (anything else is 400). `GET` responds with `text/plain`: `buggy` or `fixed`. The cookie is per browser. A POST from curl only affects later requests that send that cookie back. To point a fresh browser — including a monkeytest run — at one mode, start on a URL that carries the query:
 
 ```bash
-# from a monkeytest-core clone, after npm install && npm run build
+# from a monkeytester clone, after npm install && npm run build
 node dist/cli.js run https://bananabeings.com --max 4 --flows 4
 node dist/cli.js run "https://bananabeings.com/?monkeytest=fixed" --max 4 --flows 4
 
