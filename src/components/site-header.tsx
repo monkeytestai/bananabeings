@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { BananaMark, Wordmark } from "@/components/brand";
 import { useCart } from "@/components/cart-provider";
+import { useAuth } from "@/components/use-auth";
+import { logOut } from "@/lib/auth";
 
 const menus = [
   {
@@ -35,12 +38,20 @@ const menus = [
 
 export function SiteHeader() {
   const cart = useCart();
+  const router = useRouter();
+  const { session } = useAuth();
   const [menu, setMenu] = useState(false);
   const [open, setOpen] = useState<string | null>(null);
 
   function close() {
     setMenu(false);
     setOpen(null);
+  }
+
+  function onLogout() {
+    logOut();
+    close();
+    router.push("/login");
   }
 
   return (
@@ -99,6 +110,25 @@ export function SiteHeader() {
           <Link href="/help" className="hidden text-sm font-medium sm:inline">
             Help
           </Link>
+          {session ? (
+            <>
+              <Link href="/account" className="hidden text-sm font-medium sm:inline">
+                Account
+              </Link>
+              <button type="button" className="hidden text-sm font-medium sm:inline" onClick={onLogout}>
+                Log out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/login" className="text-sm font-medium">
+                Log in
+              </Link>
+              <Link href="/signup" className="hidden text-sm font-medium sm:inline">
+                Sign up
+              </Link>
+            </>
+          )}
           <button
             type="button"
             className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-card"
@@ -159,6 +189,25 @@ export function SiteHeader() {
             <Link href="/help" className="rounded-xl px-2 py-3 text-lg font-semibold" onClick={close}>
               Help
             </Link>
+            {session ? (
+              <>
+                <Link href="/account" className="rounded-xl px-2 py-3 text-lg font-semibold" onClick={close}>
+                  Account
+                </Link>
+                <button type="button" className="rounded-xl px-2 py-3 text-left text-lg font-semibold" onClick={onLogout}>
+                  Log out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="rounded-xl px-2 py-3 text-lg font-semibold" onClick={close}>
+                  Log in
+                </Link>
+                <Link href="/signup" className="rounded-xl px-2 py-3 text-lg font-semibold" onClick={close}>
+                  Sign up
+                </Link>
+              </>
+            )}
           </nav>
         </div>
       ) : null}
